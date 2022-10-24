@@ -1,4 +1,4 @@
-var queue = require('./process-queue');
+var queue = require('../globals/process-queue');
 
 const processHandler = (request) => {
     return new Promise((resolve, reject) => {
