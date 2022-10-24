@@ -1,4 +1,8 @@
 const discord = require ("discord.js");
 
-exports.run = (client, message, args) =>{
+const { queueHandler } = require("../functions/queue-handler")
+
+exports.run = async (client, message, args) =>{
+    await queueHandler(`Eyo ${args[0]}`);
+
 }

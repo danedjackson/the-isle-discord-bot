@@ -21,7 +21,7 @@ fs.readdir("./events/", (err, files) => {
     });
   });
   
-  //client.commands = new Enmap();
+  client.commands = new Enmap();
   
   //Reading files under the commands directory
   fs.readdir("./commands/", (err, files) => {
