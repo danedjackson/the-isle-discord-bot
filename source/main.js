@@ -1,10 +1,9 @@
-const Discord = require("discord.js");
-const Enmap = require("enmap");
+const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const fs = require("fs");
 
-const client = new Discord.Client();
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 const config = require('./cfg/config.json')
-client.commands = new Enmap();
+client.commands = new Collection();
 chalk = require('chalk');
 client.config = config;
 
@@ -20,8 +19,6 @@ fs.readdir("./events/", (err, files) => {
       client.on(eventName, event.bind(null, client));
     });
   });
-  
-  client.commands = new Enmap();
   
   //Reading files under the commands directory
   fs.readdir("./commands/", (err, files) => {

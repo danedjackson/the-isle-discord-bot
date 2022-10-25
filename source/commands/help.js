@@ -1,11 +1,23 @@
-const discord = require ("discord.js");
+const { EmbedBuilder } = require ("discord.js");
 
-exports.run = (client, message, args) =>{
-    const help = new discord.MessageEmbed()
-    .setColor('#b434eb')
-    .setTitle('BOT Template')
-    .setURL("https://github.com/LachlanDev/Discord-BOT-Template")
-    .addField("Info", "Placeholder.")
-    .setFooter(message.author.username, message.author.displayAvatarURL)
-    message.channel.send({embed: help })
+exports.run = async (client, message, args) =>{
+    const help = new EmbedBuilder()
+        .setColor(0x0098FF)
+        .setTitle('Help title')
+        .setURL('https://discord.js.org/')
+        .setAuthor({ name: 'Some name', iconURL: 'https://i.imgur.com/AfFp7pu.png', url: 'https://discord.js.org' })
+        .setDescription('Some description here')
+        .setThumbnail('https://i.imgur.com/AfFp7pu.png')
+        .addFields(
+            { name: 'Regular field title', value: 'Some value here' },
+            { name: '\u200B', value: '\u200B' },
+            { name: 'Inline field title', value: 'Some value here', inline: true },
+            { name: 'Inline field title', value: 'Some value here', inline: true },
+        )
+        .addFields({ name: 'Inline field title', value: 'Some value here', inline: true })
+        .setImage('https://i.imgur.com/AfFp7pu.png')
+        .setTimestamp()
+        .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
+    
+    message.reply({embeds: [help] })
 };
