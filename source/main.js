@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection } = require("discord.js");
+const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord.js");
 const fs = require("fs");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
@@ -36,7 +36,7 @@ fs.readdir("./events/", (err, files) => {
 });
 
 client.on("ready", () => {
-  client.user.setActivity('Set Activity', { type: 'WATCHING' });
+  client.user.setActivity('the Admins', { type: ActivityType.Watching });
 });
 
 client.login(config.token)
