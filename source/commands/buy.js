@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 
 const config = require('../cfg/config.json');
 const User = require('../models/user');
+const DinoInfo = require('../models/dinoInfo');
+
 const { queueHandler } = require("../functions/queue-handler");
 
 exports.run = async (client, message, args) =>{
@@ -10,18 +12,7 @@ exports.run = async (client, message, args) =>{
     //If direct command with parameters used :
     if (args.length != 0) {
         var requestedDinoName = args[0];
-        var requestedServer = args[1];
-        var isSafelogged = args[2];
-
-        //Checks if server is numerical
-        try{
-            requestedServer = parseInt(requestedServer);
-        } catch(err){
-            message.reply(`something was wrong with your request. Please enter a correct server number.`);
-            console.error(`${message.author.username} | invalid server entered in buy command`);
-            return;
-        }
-
+        var isSafelogged = args[1];
 
         //Checks if safel;og flag starts with y
         if(!isSafelogged.toLowerCase().startsWith('y')) {
@@ -32,35 +23,24 @@ exports.run = async (client, message, args) =>{
         //Check if requested dino name is valid
         try{
             await mongoose.connect(config.mongodb.uri);
-            // const u = new User({discordId: "192341253", steamId: "82471829271"});
-            // await u.save();
-            var userInfo = await User.find();
-            console.log(userInfo);
-            return;
+            
+            var dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
+            console.log(dinoInfo);
+            if(dinoInfo.length < 1) {
+                message.reply(`Incorrect dino name entered, please try again.`);
+                return;
+            }
         } catch (err) {
-            console.error(err);
+            console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err}`);
+            message.reply(`Something went wrong on the server. Please try again later.`)
             return;
         } 
+
+        var dinoName = dinoInfo[0].survival ? dinoInfo[0].codeName + "AdultS" : dinoInfo[0].codeName;
+        //Capitalizing first letter
+        dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
+        var dinoPrice = dinoInfo[0].price;
+
+        
     }
-
-
-    const exampleEmbed = new EmbedBuilder()
-        .setColor(0x0099FF)
-        .setTitle('Some title')
-        .setURL('https://discord.js.org/')
-        .setAuthor({ name: 'Some name', iconURL: 'https://i.imgur.com/AfFp7pu.png', url: 'https://discord.js.org' })
-        .setDescription('Some description here')
-        .setThumbnail('https://i.imgur.com/AfFp7pu.png')
-        .addFields(
-            { name: 'Regular field title', value: 'Some value here' },
-            { name: '\u200B', value: '\u200B' },
-            { name: 'Inline field title', value: 'Some value here', inline: true },
-            { name: 'Inline field title', value: 'Some value here', inline: true },
-        )
-        .addFields({ name: 'Inline field title', value: 'Some value here', inline: true })
-        .setImage('https://i.imgur.com/AfFp7pu.png')
-        .setTimestamp()
-        .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
-
-    message.reply({ embeds: [exampleEmbed] });  
 }
