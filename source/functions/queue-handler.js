@@ -7,7 +7,7 @@ const queueHandler = async(request) => {
 
     while (queue.length >= 1){
         console.debug(queue);
-        await processHandler();
+        await processHandler(queue[0]);
     }
     return;
 }

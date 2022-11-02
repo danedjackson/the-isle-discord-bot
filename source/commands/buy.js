@@ -13,10 +13,14 @@ exports.run = async (client, message, args) =>{
     if (args.length != 0) {
         var requestedDinoName = args[0];
         var isSafelogged = args[1];
+        var steamId = args[2];
 
-        //Checks if safel;og flag starts with y
+        //Check if steamId is numeric
+
+
+        //Checks if safelog flag starts with y
         if(!isSafelogged.toLowerCase().startsWith('y')) {
-            message.reply(`you must be safelogged before requesting a dinosaur.`)
+            message.reply(`you must be safelogged before requesting a dinosaur.`);
             return;
         }
 
@@ -32,15 +36,15 @@ exports.run = async (client, message, args) =>{
             }
         } catch (err) {
             console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err}`);
-            message.reply(`Something went wrong on the server. Please try again later.`)
+            message.reply(`Something went wrong on the server. Please try again later.`);
             return;
         } 
-
+        //Format code name for dinosaur to grow
         var dinoName = dinoInfo[0].survival ? dinoInfo[0].codeName + "AdultS" : dinoInfo[0].codeName;
-        //Capitalizing first letter
+        //Capitalizing first letter of dinosaur name for the JSON filename
         dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
         var dinoPrice = dinoInfo[0].price;
 
-        
+        await queueHandler( [dinoName, dinoPrice, steamId] );
     }
 }
