@@ -1,4 +1,3 @@
-const { EmbedBuilder } = require ("discord.js");
 const mongoose = require('mongoose');
 
 const config = require('../cfg/config.json');
@@ -44,6 +43,6 @@ exports.run = async (client, message, args) =>{
         dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
         var dinoPrice = dinoInfo[0].price;
 
-        await queueHandler( [dinoName, dinoPrice, steamId] );
+        await queueHandler( ["grow", dinoName, dinoPrice, steamId, message] );
     }
 }

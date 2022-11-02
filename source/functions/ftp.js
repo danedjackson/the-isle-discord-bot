@@ -1,7 +1,7 @@
 const ftp = require('basic-ftp');
 const fs = require('fs');
 const path = require('path');
-const config = require('../../cfg/config.json');
+const config = require('../cfg/config.json');
 
 const serverIp = config.serverInfo.server;
 const ftpLocation = config.serverInfo.ftpLocation;
@@ -37,7 +37,7 @@ const downloadFile = async (steamId) => {
         ftpClient.close();
         return("Ok");
     } catch ( err ) {
-        console.log(`Error while downloading file: ${err.stack}`);
+        console.error(`Error while downloading file: ${err.stack}`);
         ftpClient.close();
         return(`something went wrong injecting your dino. Please try again.`);
     }
@@ -76,7 +76,7 @@ const growEdit = async(dinoName, steamId) => {
         fs.writeFileSync(`${steamId}.json`, JSON.stringify(contents, null, 4));
         return ("Ok");
     } catch ( err ) {
-        console.error(`Something went wrong editing file information: ${err}`);
+        console.error(`Something went wrong editing file information: ${err.stack}`);
         return(`something went wrong injecting your dino. Please try again.`);
     }
 }
@@ -102,7 +102,7 @@ const uploadFile = async(steamId) => {
         deleteLocalFile(steamId);
         return("Ok");
     } catch( err ) {
-        console.error(`Error occurred trying to upload file: ${err}`);
+        console.error(`Error occurred trying to upload file: ${err.stack}`);
         ftpClient.close();
         return(`something went wrong. Try again please.`);
     }
