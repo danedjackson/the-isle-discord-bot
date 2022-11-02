@@ -1,7 +1,7 @@
 const ftp = require('basic-ftp');
 const fs = require('fs');
 const path = require('path');
-const config = require('../cfg/config.json');
+const config = require('../../cfg/config.json');
 
 const serverIp = config.serverInfo.server;
 const ftpLocation = config.serverInfo.ftpLocation;
@@ -11,7 +11,7 @@ const ftpPassword = config.serverInfo.password;
 
 const serverConnection = async (client) => {
     await client.access({
-        host: ftpLocation,
+        host: serverIp,
         port: ftpPort,
         user: ftpUsername,
         password: ftpPassword
@@ -20,17 +20,25 @@ const serverConnection = async (client) => {
     return client;
 }
 
+async function deleteLocalFile(fileId) {
+    console.log("Deleting local files . . .");
+    fs.unlink("./" + fileId + ".json", (err) => {
+        if (err) console.error(err);
+    });
+}
+
 const downloadFile = async (steamId) => {
     var ftpClient = new ftp.Client();
-    console.log(`Downloading file. . . ${serverIp}${steamId}.json`);
+    console.log(`Downloading file. . . ${serverIp}${ftpLocation}${steamId}.json`);
     ftpClient.ftp.ipFamily = 4;
+    ftpClient.ftp.verbose = true;
     try {
         ftpClient = await serverConnection(ftpClient);
-        await ftpClient.downloadTo(steamId + ".json", `${serverIp}${steamId}.json`);
+        await ftpClient.downloadTo(steamId + ".json", `${serverIp}${ftpLocation}${steamId}.json`);
         ftpClient.close();
         return("Ok");
     } catch ( err ) {
-        console.log(`Error while downloading file: ${err}`);
+        console.log(`Error while downloading file: ${err.stack}`);
         ftpClient.close();
         return(`something went wrong injecting your dino. Please try again.`);
     }
@@ -80,10 +88,10 @@ const uploadFile = async(steamId) => {
     ftpClient.ftp.ipFamily = 4;
     try {
         ftpClient = await serverConnection(ftpClient);
-        var status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${steamId}.json`);
+        var status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${ftpLocation}${steamId}.json`);
         var retryCount = 0;
         while (status.code != 226 && retryCount < 2) {
-            status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${steamId}.json`);
+            status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${ftpLocation}${steamId}.json`);
             retryCount++;
         }
         if (status.code != 226) {
@@ -97,6 +105,8 @@ const uploadFile = async(steamId) => {
     } catch( err ) {
         console.error(`Error occurred trying to upload file: ${err}`);
         ftpClient.close();
-        return(`something went wrong. Do you have a dino on the server? Try again please.`);
+        return(`something went wrong. Try again please.`);
     }
 }
+
+module.exports = { downloadFile, growEdit, uploadFile }
