@@ -29,7 +29,6 @@ exports.run = async (client, message, args) =>{
             await mongoose.connect(config.mongodb.uri);
             
             var dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
-            console.log(dinoInfo);
             if(dinoInfo.length < 1) {
                 message.reply(`Incorrect dino name entered, please try again.`);
                 return;

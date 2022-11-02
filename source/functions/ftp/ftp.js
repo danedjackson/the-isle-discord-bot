@@ -31,7 +31,6 @@ const downloadFile = async (steamId) => {
     var ftpClient = new ftp.Client();
     console.log(`Downloading file. . . ${serverIp}${ftpLocation}${steamId}.json`);
     ftpClient.ftp.ipFamily = 4;
-    ftpClient.ftp.verbose = true;
     try {
         ftpClient = await serverConnection(ftpClient);
         await ftpClient.downloadTo(steamId + ".json", `${serverIp}${ftpLocation}${steamId}.json`);

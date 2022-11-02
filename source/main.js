@@ -8,7 +8,7 @@ chalk = require('chalk');
 client.config = config;
 
 //Reading files under the events directory
-fs.readdir("./events/", (err, files) => {
+fs.readdir("./source/events/", (err, files) => {
     if (err) return console.error(err);
     //Looping through each file under events folder
     files.forEach(file => {
@@ -21,7 +21,7 @@ fs.readdir("./events/", (err, files) => {
   });
   
   //Reading files under the commands directory
-  fs.readdir("./commands/", (err, files) => {
+  fs.readdir("./source/commands/", (err, files) => {
     if (err) return console.error(err);
     //Looping through each file under the commands folder
     files.forEach(file => {
