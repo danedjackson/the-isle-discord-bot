@@ -4,14 +4,14 @@
   "description": "Discord Bot Base",
   "main": "index.js",
   "scripts": {
-    "start": "node ./source/main.js",
+    "start": "node ./main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dane Jackson",
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.0",
-    "discord.js": "^12.4.1",
-    "enmap": "^5.8.2"
+    "discord.js": "^14.6.0",
+    "mongoose": "^6.7.0"
   }
 }
