@@ -19,7 +19,7 @@ async function getUserAmount(userID) {
         })
         .catch(function (error) {
             // handle error
-            console.error("Error: " + error.message);
+            console.error("Error: " + error.stack);
             return false;
         })
         .then(function () {
@@ -45,7 +45,7 @@ async function deductUserAmountCash(userID, price) {
         return true;
     })
     .catch(function (error) {
-        console.error("Error: " + error.message);
+        console.error("Error: " + error.stack);
         return false;
     });
 }
@@ -64,7 +64,7 @@ async function deductUserAmountBank(userID, price) {
         return true;
     })
     .catch(function (error) {
-        console.error("Error: " + error.message);
+        console.error("Error: " + error.stack);
         return false;
     });
 }
@@ -83,7 +83,7 @@ async function addUserAmountBank(userID, amount) {
         return true;
     })
     .catch(function (error) {
-        console.error("Error: " + error.message);
+        console.error("Error: " + error.stack);
         return false;
     });
 }

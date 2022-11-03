@@ -38,10 +38,14 @@ exports.run = async (client, message, args) =>{
             return;
         } 
         //Format code name for dinosaur to grow
-        var dinoName = dinoInfo[0].survival ? dinoInfo[0].codeName + "JuvS" : dinoInfo[0].codeName + "Juv";
+        if (dinoInfo[0].survival) {
+            dinoName = dinoInfo[0].codeName + "JuvS";
+        } else {
+            return message.reply(`Grows for non-survival juveniles are not available at the moment.`);
+        }
         //Capitalizing first letter of dinosaur name for the JSON filename
         dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
 
-        await queueHandler( ["grow", dinoName, steamId, message] );
+        await queueHandler( ["grow", dinoName, 0, steamId, message] );
     }
 }

@@ -45,15 +45,10 @@ const downloadFile = async (steamId) => {
 
 const growEdit = async(dinoName, steamId) => {
     console.log(`Editing file to grow Dino. . . `);
+    //TODO: Compare dino in downloaded file with requested dino to make sure they are the same before processing
     try{
         var data = fs.readFileSync(`${steamId}.json`, `utf-8`);
         var contents = JSON.parse(data);
-        if(contents.bBrokenLegs) {
-            return (`your dino's leg is broken, please heal the leg and try again.`);
-        }
-        if(contents.BleedingRate.localeCompare("0") !== 0) {
-            return(`your dino is bleeding, please heal the bleed and try again.`);
-        }
         var height;
         dinoName.toLowerCase() == "spino" ? height = 200 : height = 100;
         contents.CharacterClass = dinoName;
@@ -82,7 +77,36 @@ const growEdit = async(dinoName, steamId) => {
 }
 
 const injectEdit = async(dinoName, dinoGender, steamId) => {
+    console.log(`Editing file to grow Dino. . . `);
+    try{
+        var data = fs.readFileSync(`${steamId}.json`, `utf-8`);
+        var contents = JSON.parse(data);
+        var height;
+        dinoName.toLowerCase() == "spino" ? height = 200 : height = 100;
+        contents.bGender = dinoGender.toLowerCase().startsWith("m") ? false : true;
+        contents.CharacterClass = dinoName;
+        contents.Growth = "1.0";
+        contents.Hunger = "9999";
+        contents.Thirst = "9999";
+        contents.Stamina = "9999";
+        contents.Health = "15000";
+        //Prevent fall through map
+        var locationParts;
+        locationParts = contents.Location_Isle_V3.split("Z=", 2);
+        locationParts[1] = parseFloat(locationParts[1]);
+        locationParts[1] += height;
+        locationParts[0] += "Z=";
+        locationParts[1] = locationParts[1].toString();
+        var completed = locationParts[0] + locationParts[1];
+        contents.Location_Isle_V3 = completed;
+        
 
+        fs.writeFileSync(`${steamId}.json`, JSON.stringify(contents, null, 4));
+        return ("Ok");
+    } catch ( err ) {
+        console.error(`Something went wrong editing file information: ${err.stack}`);
+        return(`something went wrong injecting your dino. Please try again.`);
+    }
 }
 
 const uploadFile = async(steamId) => {
