@@ -81,6 +81,10 @@ const growEdit = async(dinoName, steamId) => {
     }
 }
 
+const injectEdit = async(dinoName, dinoGender, steamId) => {
+
+}
+
 const uploadFile = async(steamId) => {
     var ftpClient = new ftp.Client();
     console.log(`Uploading file. . .`);
@@ -108,4 +112,4 @@ const uploadFile = async(steamId) => {
     }
 }
 
-module.exports = { downloadFile, growEdit, uploadFile }
+module.exports = { downloadFile, growEdit, injectEdit, uploadFile }

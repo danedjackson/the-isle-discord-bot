@@ -4,7 +4,7 @@ const config = require('../cfg/config.json');
 const User = require('../models/user');
 const DinoInfo = require('../models/dinoInfo');
 
-const { queueHandler } = require("../functions/queue-handler");
+const { queueHandler } = require("../functions/handlers/queue-handler");
 
 exports.run = async (client, message, args) =>{
     
