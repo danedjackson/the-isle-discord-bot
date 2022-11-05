@@ -1,8 +1,4 @@
-const mongoose = require('mongoose');
-
-const config = require('../cfg/config.json');
-const User = require('../models/user');
-const DinoInfo = require('../models/dinoInfo');
+const { getDinoInfo } = require('../functions/connectors/mongodb-connector');
 
 const { queueHandler } = require("../functions/handlers/queue-handler");
 
@@ -24,19 +20,9 @@ exports.run = async (client, message, args) =>{
         }
 
         //Check if requested dino name is valid
-        try{
-            await mongoose.connect(config.mongodb.uri);
-            
-            var dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
-            if(dinoInfo.length < 1) {
-                message.reply(`Incorrect dino name entered, please try again.`);
-                return;
-            }
-        } catch (err) {
-            console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err}`);
-            message.reply(`Something went wrong on the server. Please try again later.`);
-            return;
-        } 
+        var dinoInfo = await getDinoInfo(message, requestedDinoName);
+        if (dinoInfo == []) return;
+        
         //Format code name for dinosaur to grow
         var dinoName = dinoInfo[0].survival ? dinoInfo[0].codeName + "AdultS" : dinoInfo[0].codeName;
         //Capitalizing first letter of dinosaur name for the JSON filename
