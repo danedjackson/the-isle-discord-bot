@@ -16,7 +16,15 @@ const dinoSchema = new Schema({
     },
     survival: {
         type: Boolean,
-        required: false
+        required: true
+    },
+    tier: {
+        type: Number,
+        required: true
+    },
+    diet: {
+        type: String,
+        required: true
     }
 });
 
