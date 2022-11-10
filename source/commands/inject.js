@@ -16,13 +16,11 @@ exports.run = async (client, message, args) =>{
     var steamId = args[2];
     var isSafelogged = args[3];
 
-    //TODO:Check if steamId is numeric
     if (!/^\d+$/.test(steamId)) {
         message.reply(`invalid steamId entered.`);
         return;
     }
 
-    //TODO:Check if gender is either m or f
     if(!dinoGender.toLowerCase().startsWith("m") && !dinoGender.toLowerCase().startsWith("f")){
         message.reply(`invalid gender selected.`)
         return;
