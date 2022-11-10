@@ -1,5 +1,5 @@
 
-const { getUserAmount, deductUserAmountCash, deductUserAmountBank, addUserAmountBank } = require('../purchase');
+const { getUserAmount, deductUserAmountCash, deductUserAmountBank, addUserAmountBank } = require('../api/unbelievaboat-api');
 var config = require('../../cfg/config.json');
 
 const checkBalance = async(price, userId) => {
