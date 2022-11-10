@@ -2,7 +2,8 @@ const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord
 const fs = require("fs");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-const config = require('./cfg/config.json')
+const config = require('./cfg/config.json');
+const { getServerPopulation } = require("./functions/api/steam-server-query-api");
 client.commands = new Collection();
 chalk = require('chalk');
 client.config = config;
@@ -35,8 +36,18 @@ fs.readdir("./source/events/", (err, files) => {
     });
 });
 
-client.on("ready", () => {
-  client.user.setActivity('the Admins', { type: ActivityType.Watching });
+client.on("ready", async() => {
+  client.user.setActivity(`the Admins`, { type: ActivityType.Watching });
 });
+
+const updateBotActivityWithPlayerCount = async() => {
+  setTimeout(async () => {
+    client.user.setActivity(await getServerPopulation(), { type: ActivityType.Watching });
+    console.log(1)
+    updateBotActivityWithPlayerCount();
+  }, 3000);
+}
+
+updateBotActivityWithPlayerCount();
 
 client.login(config.token)
