@@ -39,8 +39,7 @@ exports.run = async (client, message, args) =>{
         
         //Test requested dino if it's for a sub
         requestedDinoName = checkRequestForSub(requestedDinoName);
-
-        console.log(requestedDinoName);
+        
         var dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
         if(dinoInfo.length < 1) {
             message.reply(`Incorrect dino name entered, please try again.`);
