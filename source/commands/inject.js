@@ -5,6 +5,7 @@ const User = require('../models/user');
 const DinoInfo = require('../models/dinoInfo');
 
 const { queueHandler } = require("../functions/handlers/queue-handler");
+const {checkRequestForSub} = require('../functions/helper');
 
 exports.run = async (client, message, args) =>{
     if (args.length != 4) {
@@ -36,6 +37,9 @@ exports.run = async (client, message, args) =>{
     try{
         await mongoose.connect(config.mongodb.uri);
         
+        //Test requested dino if it's for a sub
+        requestedDinoName = checkRequestForSub(requestedDinoName);
+        
         var dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
         if(dinoInfo.length < 1) {
             message.reply(`Incorrect dino name entered, please try again.`);
@@ -47,7 +51,8 @@ exports.run = async (client, message, args) =>{
         return;
     } 
     //Format code name for dinosaur to grow
-    var dinoName = dinoInfo[0].survival ? dinoInfo[0].codeName + "AdultS" : dinoInfo[0].codeName;
+    var dinoName = dinoInfo[0].survival && !dinoInfo[0].toString().includes("subs") ? dinoInfo[0].codeName + "AdultS" : dinoInfo[0].codeName;
+    
     //Capitalizing first letter of dinosaur name for the JSON filename
     dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
     var dinoPrice = dinoInfo[0].price;
