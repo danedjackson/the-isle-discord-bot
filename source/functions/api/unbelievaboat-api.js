@@ -1,6 +1,6 @@
 //Logic for checking user balance / deducting from / adding to balance
 const axios = require('axios');
-var config = require('../cfg/config.json');
+var config = require('../../cfg/config.json');
 
 var unbelievaboatUrl = config.unbelievaboat.url;
 var guildId = config.unbelievaboat.guildId;
