@@ -5,6 +5,7 @@ const User = require('../models/user');
 const DinoInfo = require('../models/dinoInfo');
 
 const { queueHandler } = require("../functions/handlers/queue-handler");
+const { checkRequestForSub } = require('../functions/helper');
 
 exports.run = async (client, message, args) =>{
     if (args.length != 4) {
@@ -31,6 +32,8 @@ exports.run = async (client, message, args) =>{
         message.reply(`you must be safelogged before requesting a dinosaur.`);
         return;
     }
+    
+    requestedDinoName = checkRequestForSub(requestedDinoName);
 
     //Check if requested dino name is valid
     try{
