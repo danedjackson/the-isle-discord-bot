@@ -50,6 +50,13 @@ const growEdit = async(dinoName, steamId) => {
         var data = fs.readFileSync(`${steamId}.json`, `utf-8`);
         var contents = JSON.parse(data);
         var height;
+
+        //If already fully grown, do not process.
+        if(contents.CharacterClass.toString().toLowerCase().includes("adults") && parseFloat(contents.Growth) == 1) {
+            deleteLocalFile(steamId);
+            return ("dino is already fully grown.");
+        }
+
         dinoName.toLowerCase() == "spino" ? height = 200 : height = 100;
         contents.CharacterClass = dinoName;
         contents.Growth = "1.0";
