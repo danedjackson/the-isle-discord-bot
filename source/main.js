@@ -35,7 +35,22 @@ fs.readdir("./source/events/", (err, files) => {
       //Creating a listener for each defined event
       client.commands.set(commandName, args);
     });
-});
+  });
+
+  //Reading files under the admin commands directory
+  fs.readdir("./source/commands/admin/", (err, files) => {
+    if (err) return console.error(err);
+    //Looping through each file under the commands folder
+    files.forEach(file => {
+      if (!file.endsWith(".js")) return;
+      let args = require(`./commands/admin/${file}`);
+      //Grabbing event name by parsing file name
+      let commandName = file.split(".")[0];
+      console.log(chalk.yellow(`[+] ${commandName}`));
+      //Creating a listener for each defined event
+      client.commands.set(commandName, args);
+    });
+  });
 
 client.on("ready", async() => {
   client.user.setActivity(`the Admins`, { type: ActivityType.Watching });

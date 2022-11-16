@@ -101,4 +101,27 @@ const addUserInfo = async(message, steamId) => {
     }
 }
 
-module.exports = { getDinoInfo, getAllDinoInfo, getHighestDinoTier, getUserInfo, addUserInfo }
+const updateDinoPriceAndTier = async (message, codeName, newPrice, newTier) => {
+    var dinoInfo;
+    try {
+        var connection = await mongoConnect(message);
+        dinoInfo = await DinoInfo.findOne( {codeName: codeName} );
+    } catch(err) {
+        handleError(message, err);
+        return dinoInfo;
+    }
+    if (dinoInfo == null){
+        message.reply(`Could not find dino information for ${codeName}`);
+        return dinoInfo;
+    }
+
+    var updatedDinoInfo = dinoInfo;
+    updatedDinoInfo.price = newPrice;
+    updatedDinoInfo.tier = newTier;
+
+    updatedDinoInfo = await updatedDinoInfo.save();
+    connection.disconnect();
+    return updatedDinoInfo;
+}
+
+module.exports = { getDinoInfo, getAllDinoInfo, getHighestDinoTier, getUserInfo, addUserInfo, updateDinoPriceAndTier }
