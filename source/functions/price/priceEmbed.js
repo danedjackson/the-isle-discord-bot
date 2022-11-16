@@ -25,7 +25,7 @@ const priceEmbed = async(message) => {
         //If dino is found under tiers, create embed field
         if(dinoName.length != 0 && dinoPrice != undefined) {
             embed.addFields(
-                { name: `Tier ${i} - ${dinoPrice.price} :moneybag:`, value: `- ${dinoName.join(',').replace(/,/g, '\n- ').split()}`, inline: i%3 == 0 ? false : true }
+                { name: `Tier ${i} - ${dinoPrice.price.toLocaleString()} :moneybag:`, value: `- ${dinoName.join(',').replace(/,/g, '\n- ').split()}`, inline: false}
 
             )
         }
