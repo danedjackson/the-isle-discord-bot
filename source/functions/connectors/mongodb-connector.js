@@ -101,4 +101,8 @@ const addUserInfo = async(message, steamId) => {
     }
 }
 
+const updateDinoPrice = async(message, codeName, price) => {
+    
+}
+
 module.exports = { getDinoInfo, getAllDinoInfo, getHighestDinoTier, getUserInfo, addUserInfo }
