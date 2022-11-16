@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const config = require('../cfg/config.json');
-const User = require('../models/user');
 const DinoInfo = require('../models/dinoInfo');
 
 const { queueHandler } = require("../functions/handlers/queue-handler");
