@@ -11,6 +11,11 @@ const mongoConnect = async(message) => {
     }
 }
 
+const handleError = (message, err) => {
+    console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err.stack}`);
+    message.reply(`Something went wrong on the server. Please try again later.`);
+}
+
 const getDinoInfo = async(message, requestedDinoName) => {
      //Check if requested dino name is valid
      var dinoInfo = [];
@@ -26,8 +31,7 @@ const getDinoInfo = async(message, requestedDinoName) => {
             return dinoInfo;
         }
     } catch (err) {
-        console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err.stack}`);
-        message.reply(`Something went wrong on the server. Please try again later.`);
+        handleError(message, err);
         return dinoInfo;
     } 
 
@@ -43,8 +47,7 @@ const getAllDinoInfo = async(message) => {
         connection.disconnect();
 
     } catch (err) {
-        console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err.stack}`);
-        message.reply(`Something went wrong on the server. Please try again later.`);
+        handleError(message, err);
         return dinoInfo;
     } 
 
@@ -59,11 +62,66 @@ const getHighestDinoTier = async(message) => {
         highest = highest[0].tier;
         connection.disconnect();
     } catch (err) {
-        console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err.stack}`);
-        message.reply(`Something went wrong on the server. Please try again later.`);
+        handleError(message, err);
         return highest;
     } 
     return highest;
 }
 
-module.exports = { getDinoInfo, getAllDinoInfo, getHighestDinoTier }
+const getUserInfo = async(message, steamId) => {
+    var userInfo;
+    try {
+        var connection = await mongoConnect(message);
+
+        userInfo = await User.findOne( {steamId: steamId} ).exec();
+        connection.disconnect();
+    } catch (err) {
+        handleError(message, err);
+        //Avoid the returning of null, since a null is a positive return type for this function in some cases.
+        return "error";
+    }
+    return userInfo;
+}
+
+const addUserInfo = async(message, steamId) => {
+    try {
+        const newUser = new User({
+            discordId: message.author.id,
+            steamId: steamId,
+        });
+
+        var connection = await mongoConnect(message);
+
+        await newUser.save();
+        connection.disconnect();
+        return true;
+    } catch (err) {
+        handleError(message, err);
+        return false;
+    }
+}
+
+const updateDinoPriceAndTier = async (message, codeName, newPrice, newTier) => {
+    var dinoInfo;
+    try {
+        var connection = await mongoConnect(message);
+        dinoInfo = await DinoInfo.findOne( {codeName: codeName} );
+    } catch(err) {
+        handleError(message, err);
+        return dinoInfo;
+    }
+    if (dinoInfo == null){
+        message.reply(`Could not find dino information for ${codeName}`);
+        return dinoInfo;
+    }
+
+    var updatedDinoInfo = dinoInfo;
+    updatedDinoInfo.price = newPrice;
+    updatedDinoInfo.tier = newTier;
+
+    updatedDinoInfo = await updatedDinoInfo.save();
+    connection.disconnect();
+    return updatedDinoInfo;
+}
+
+module.exports = { getDinoInfo, getAllDinoInfo, getHighestDinoTier, getUserInfo, addUserInfo, updateDinoPriceAndTier }
