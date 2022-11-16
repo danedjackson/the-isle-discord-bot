@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord.js");
+require('log-timestamp')(() => {return new Date().toISOString() + " %s"});
 const fs = require("fs");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
