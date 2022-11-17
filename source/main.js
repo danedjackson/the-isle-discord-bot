@@ -60,7 +60,7 @@ const updateBotActivityWithPlayerCount = async() => {
   setTimeout(async () => {
     client.user.setActivity(await getServerPopulation(), { type: ActivityType.Watching });
     updateBotActivityWithPlayerCount();
-  }, 3000);
+  }, 6000);
 }
 
 updateBotActivityWithPlayerCount();
