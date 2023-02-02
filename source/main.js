@@ -38,7 +38,7 @@ fs.readdir("./source/events/", (err, files) => {
   });
 
   //Reading files under the admin commands directory
-  fs.readdir("./source/commands/admin", (err, files) => {
+  fs.readdir("./source/commands/admin/", (err, files) => {
     if (err) return console.error(err);
     //Looping through each file under the commands folder
     files.forEach(file => {
@@ -60,7 +60,7 @@ const updateBotActivityWithPlayerCount = async() => {
   setTimeout(async () => {
     client.user.setActivity(await getServerPopulation(), { type: ActivityType.Watching });
     updateBotActivityWithPlayerCount();
-  }, 3000);
+  }, 6000);
 }
 
 updateBotActivityWithPlayerCount();
