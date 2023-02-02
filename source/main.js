@@ -56,13 +56,14 @@ client.on("ready", async() => {
   client.user.setActivity(`the Admins`, { type: ActivityType.Watching });
 });
 
-const updateBotActivityWithPlayerCount = async() => {
-  setTimeout(async () => {
-    client.user.setActivity(await getServerPopulation(), { type: ActivityType.Watching });
-    updateBotActivityWithPlayerCount();
-  }, 6000);
-}
+//TODO:This library is really bad with its rate limiting. Use a different method to fetch player count
+// const updateBotActivityWithPlayerCount = async() => {
+//   setTimeout(async () => {
+//     client.user.setActivity(await getServerPopulation(), { type: ActivityType.Watching });
+//     updateBotActivityWithPlayerCount();
+//   }, 30000);
+// }
 
-updateBotActivityWithPlayerCount();
+// updateBotActivityWithPlayerCount();
 
 client.login(config.token)

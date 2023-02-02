@@ -1,5 +1,5 @@
 const {  downloadFile, growEdit, uploadFile } = require('../ftp');
-const { makePayment } = require('../handlers/payment-handler');
+const { checkBalance, makePayment } = require('../handlers/payment-handler');
 
 const growProcess = async (request) => {
     var response;
@@ -11,7 +11,7 @@ const growProcess = async (request) => {
     response = await downloadFile(steamId);
     if (!responseCheck(response)) return message.reply(`Something went wrong checking the server, please try again.`);
     response = await growEdit(dinoName, steamId);
-    if (!responseCheck(response)) return message.reply(`Something went wrong while making changes to your dino, please try again.`);
+    if (!responseCheck(response)) return message.reply(`Something went wrong while making changes to your dino...\n\`${response}\``);
     response = await uploadFile(steamId);
     if (!responseCheck(response)) return message.reply(`Something went wrong connecting to the server, please try again.`);
 
@@ -22,7 +22,12 @@ const growProcess = async (request) => {
 }
 
 const responseCheck = (response) => {
-    return (response != "Ok") ? false : true;
+    if (response != "Ok") {
+        console.error(response);
+        return false;
+    } else {
+        return true;
+    }
 }
 
 module.exports = { growProcess }

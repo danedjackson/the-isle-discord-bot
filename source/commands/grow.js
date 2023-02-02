@@ -2,33 +2,21 @@ const mongoose = require('mongoose');
 
 const config = require('../cfg/config.json');
 const DinoInfo = require('../models/dinoInfo');
-const { getUserInfoByDiscordId } = require('../functions/connectors/mongodb-connector');
+
 const { queueHandler } = require("../functions/handlers/queue-handler");
 const { checkRequestForSub } = require('../functions/helper');
 
 exports.run = async (client, message, args) =>{
     if (args.length != 3) {
-        return message.reply(`***Incorrect format***\nCorrect format is: \n\`${config.prefix}inject [dino] [gender] [safelogged status]\`\nExample:\n\`${config.prefix}inject Utah M Y\``);
+        return message.reply(`***Incorrect format***\nCorrect format is: \n\`${config.prefix}grow [dino] [steam ID] [safelogged status]\`\nExample:\n\`${config.prefix}grow Utah 76561198877008754 Y\``);
     }
 
-    let requestedDinoName = args[0];
-    const dinoGender = args[1];
-    const userInfo = await getUserInfoByDiscordId(message);
-    const steamId = userInfo.steamId;
-    const isSafelogged = args[2];
-
-    if (steamId === null || steamId === undefined) {
-        message.reply(`you need to link your steam ID using the ${config.prefix}link command to inject.`);
-        return;
-    }
+    var requestedDinoName = args[0];
+    var steamId = args[1];
+    var isSafelogged = args[2];
 
     if (!/^\d+$/.test(steamId)) {
         message.reply(`invalid steamId entered.`);
-        return;
-    }
-
-    if(!dinoGender.toLowerCase().startsWith("m") && !dinoGender.toLowerCase().startsWith("f")){
-        message.reply(`invalid gender selected.`)
         return;
     }
 
@@ -40,7 +28,6 @@ exports.run = async (client, message, args) =>{
     
     requestedDinoName = checkRequestForSub(requestedDinoName);
 
-    //TODO: Migrate this to mongodb-connector.js
     //Check if requested dino name is valid
     try{
         await mongoose.connect(config.mongodb.uri);
@@ -65,6 +52,6 @@ exports.run = async (client, message, args) =>{
     dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
     var dinoPrice = dinoInfo[0].price;
 
-    await queueHandler( ["inject", dinoName, dinoGender, dinoPrice, steamId, message] );
+    await queueHandler( ["grow", dinoName, dinoPrice, steamId, message] );
 
 }
