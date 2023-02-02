@@ -7,22 +7,16 @@ const { queueHandler } = require("../functions/handlers/queue-handler");
 const { checkRequestForSub } = require('../functions/helper');
 
 exports.run = async (client, message, args) =>{
-    if (args.length != 4) {
-        return message.reply(`***Incorrect format***\nCorrect format is: \n\`${config.prefix}grow [dino] [gender] [steam ID] [safelogged status]\`\nExample:\n\`${config.prefix}grow Utah M 76561198877008754 Y\``);
+    if (args.length != 3) {
+        return message.reply(`***Incorrect format***\nCorrect format is: \n\`${config.prefix}grow [dino] [steam ID] [safelogged status]\`\nExample:\n\`${config.prefix}grow Utah 76561198877008754 Y\``);
     }
 
     var requestedDinoName = args[0];
-    var dinoGender = args[1];
-    var steamId = args[2];
-    var isSafelogged = args[3];
+    var steamId = args[1];
+    var isSafelogged = args[2];
 
     if (!/^\d+$/.test(steamId)) {
         message.reply(`invalid steamId entered.`);
-        return;
-    }
-
-    if(!dinoGender.toLowerCase().startsWith("m") && !dinoGender.toLowerCase().startsWith("f")){
-        message.reply(`invalid gender selected.`)
         return;
     }
 
@@ -58,6 +52,6 @@ exports.run = async (client, message, args) =>{
     dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
     var dinoPrice = dinoInfo[0].price;
 
-    await queueHandler( ["grow", dinoName, dinoGender, dinoPrice, steamId, message] );
+    await queueHandler( ["grow", dinoName, dinoPrice, steamId, message] );
 
 }

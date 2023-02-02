@@ -53,7 +53,7 @@ const growEdit = async(dinoName, steamId) => {
         //Comparing if requested dino is the same as current dino
         if(!contents.CharacterClass.toString().toLowerCase().includes(dinoName.toLowerCase())) {
             deleteLocalFile(steamId);
-            return (`unable to grow a(n) ${dinoName} since your current dino is not this species.`);
+            return (`unable to grow a(n) ${dinoName.substring(0, dinoName.indexOf("AdultS")) || dinoName} since your current dino is not this species.`);
         }
 
         //If already fully grown, do not process.
@@ -84,7 +84,7 @@ const growEdit = async(dinoName, steamId) => {
         return ("Ok");
     } catch ( err ) {
         console.error(`Something went wrong editing file information: ${err.stack}`);
-        return(`something went wrong injecting your dino. Please try again.`);
+        return(`something went wrong growing your dino. Please try again.`);
     }
 }
 

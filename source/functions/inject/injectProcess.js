@@ -22,7 +22,12 @@ const injectProcess = async (request) => {
 }
 
 const responseCheck = (response) => {
-    return (response != "Ok") ? false : true;
+    if (response != "Ok") {
+        console.error(response);
+        return false;
+    } else {
+        return true;
+    }
 }
 
 module.exports = { injectProcess }
