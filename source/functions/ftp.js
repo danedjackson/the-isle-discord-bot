@@ -45,11 +45,16 @@ const downloadFile = async (steamId) => {
 
 const growEdit = async(dinoName, steamId) => {
     console.log(`Editing file to grow Dino. . . `);
-    //TODO: Compare dino in downloaded file with requested dino to make sure they are the same before processing
     try{
         var data = fs.readFileSync(`${steamId}.json`, `utf-8`);
         var contents = JSON.parse(data);
         var height;
+
+        //Comparing if requested dino is the same as current dino
+        if(!contents.CharacterClass.toString().toLowerCase().includes(dinoName.toLowerCase())) {
+            deleteLocalFile(steamId);
+            return (`unable to grow a(n) ${dinoName} since your current dino is not this species.`);
+        }
 
         //If already fully grown, do not process.
         if(contents.CharacterClass.toString().toLowerCase().includes("adults") && parseFloat(contents.Growth) == 1) {

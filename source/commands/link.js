@@ -12,7 +12,7 @@ exports.run = async (client, message, args) =>{
         return;
     }
 
-    var userInfo = await getUserInfo(message, args[0]);
+    const userInfo = await getUserInfo(message, args[0]);
 
     if (userInfo == "error") return;
     

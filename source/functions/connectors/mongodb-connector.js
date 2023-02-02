@@ -68,7 +68,20 @@ const getHighestDinoTier = async(message) => {
     return highest;
 }
 
-const getUserInfo = async(message, steamId) => {
+const getUserInfoByDiscordId = async(message) => {
+    let userInfo;
+    try {
+        const connection = await mongoConnect(message);
+        userInfo = await User.findOne( {discordId: message.author.id} );
+        connection.disconnect();
+    } catch (err) {
+        handleError(message, err);
+        return "error";
+    }
+    return userInfo;
+}
+
+const getUserInfoBySteamId = async(message, steamId) => {
     var userInfo;
     try {
         var connection = await mongoConnect(message);
@@ -124,4 +137,4 @@ const updateDinoPriceAndTier = async (message, codeName, newPrice, newTier) => {
     return updatedDinoInfo;
 }
 
-module.exports = { getDinoInfo, getAllDinoInfo, getHighestDinoTier, getUserInfo, addUserInfo, updateDinoPriceAndTier }
+module.exports = { getDinoInfo, getAllDinoInfo, getHighestDinoTier, getUserInfo: getUserInfoBySteamId, addUserInfo, updateDinoPriceAndTier, getUserInfoByDiscordId }
