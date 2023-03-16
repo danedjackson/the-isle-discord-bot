@@ -1,5 +1,5 @@
 const { processHandler } = require('./process-handler');
-var queue = require('../../globals/process-queue');
+const queue = require('../../globals/process-queue');
 
 const queueHandler = async(request) => {
     queue.push(request);

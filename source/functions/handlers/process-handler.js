@@ -1,6 +1,6 @@
 const { growProcess } = require('../grow/growProcess');
 const { injectProcess } = require('../inject/injectProcess');
-var queue = require('../../globals/process-queue');
+const queue = require('../../globals/process-queue');
 
 //First element of request is the type of process to be done. Route accordingly.
 const processHandler = async (request) => {
