@@ -9,18 +9,28 @@ const ftpPort = config.serverInfo.port;
 const ftpUsername = config.serverInfo.username;
 const ftpPassword = config.serverInfo.password;
 
-const serverConnection = async (client) => {
-    await client.access({
-        host: serverIp,
-        port: ftpPort,
-        user: ftpUsername,
-        password: ftpPassword
-    });
+const ftpClient = new ftp.Client();
 
-    return client;
+const serverConnection = async () => {
+    // if the ftp client connection isn't closed, then reuse the connection
+    if(!ftpClient.closed) return true;
+
+    try {
+        ftpClient.ftp.ipFamily = 4;
+        await ftpClient.access({
+            host: serverIp,
+            port: ftpPort,
+            user: ftpUsername,
+            password: ftpPassword
+        }); 
+        return true;
+    } catch(err) {
+        console.error(`something went wrong trying to connect to the FTP server:\n${err}`);
+        return false;
+    }
 }
 
-async function deleteLocalFile(fileId) {
+const deleteLocalFile = async (fileId) => {
     console.log("Deleting local files . . .");
     fs.unlink("./" + fileId + ".json", (err) => {
         if (err) console.error(err);
@@ -28,11 +38,9 @@ async function deleteLocalFile(fileId) {
 }
 
 const downloadFile = async (steamId) => {
-    var ftpClient = new ftp.Client();
     console.log(`Downloading file. . . ${serverIp}${ftpLocation}${steamId}.json`);
-    ftpClient.ftp.ipFamily = 4;
     try {
-        ftpClient = await serverConnection(ftpClient);
+        if (!await serverConnection()) return `something went wrong connecting to the server, please try again`;
         await ftpClient.downloadTo(steamId + ".json", `${serverIp}${ftpLocation}${steamId}.json`);
         ftpClient.close();
         return("Ok");
@@ -122,11 +130,9 @@ const injectEdit = async(dinoName, dinoGender, steamId) => {
 }
 
 const uploadFile = async(steamId) => {
-    var ftpClient = new ftp.Client();
     console.log(`Uploading file. . .`);
-    ftpClient.ftp.ipFamily = 4;
     try {
-        ftpClient = await serverConnection(ftpClient);
+        if (!await serverConnection()) return `something went wrong connecting to the server, please try again`;
         var status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${ftpLocation}${steamId}.json`);
         var retryCount = 0;
         while (status.code != 226 && retryCount < 2) {

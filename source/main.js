@@ -4,7 +4,7 @@ const fs = require("fs");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 const config = require('./cfg/config.json');
-const { getServerPopulation } = require("./functions/api/steam-server-query-api");
+const { getServerInfo } = require("./functions/api/steam-api");
 client.commands = new Collection();
 chalk = require('chalk');
 client.config = config;
@@ -56,14 +56,14 @@ client.on("ready", async() => {
   client.user.setActivity(`the Admins`, { type: ActivityType.Watching });
 });
 
-//TODO:This library is really bad with its rate limiting. Use a different method to fetch player count
-// const updateBotActivityWithPlayerCount = async() => {
-//   setTimeout(async () => {
-//     client.user.setActivity(await getServerPopulation(), { type: ActivityType.Watching });
-//     updateBotActivityWithPlayerCount();
-//   }, 30000);
-// }
+// Handles Player count display
+const updateBotActivityWithPlayerCount = async() => {
+  setTimeout(async () => {
+    client.user.setActivity(await getServerInfo(config.serverInfo.server, config.serverInfo.queryPort), { type: ActivityType.Watching });
+    updateBotActivityWithPlayerCount();
+  }, 5000);
+}
 
-// updateBotActivityWithPlayerCount();
+updateBotActivityWithPlayerCount();
 
 client.login(config.token)
