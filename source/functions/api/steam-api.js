@@ -1,7 +1,7 @@
 
 const gamedig = require('gamedig');
 
-const getServerInfo = async () => {
+const getServerInfo = async (serverIP, serverPort) => {
     const serverInfo = {
       currentPlayers: 0,
       maxPlayers: 125
@@ -10,8 +10,8 @@ const getServerInfo = async () => {
     try {
       const state = await gamedig.query({
         type: 'tf2',
-        host: '104.206.80.154',
-        port: '14010'
+        host: serverIP,
+        port: serverPort
       });
   
       serverInfo.currentPlayers = state.players.length;
