@@ -1,0 +1,18 @@
+{
+    "token": "",
+    "prefix": "",
+    "serverInfo" : {
+        "server": "",
+        "queryPort": "",
+        "username": "",
+        "password": ""
+    },
+    "mongodb": {
+        "uri": ""
+    },
+    "unbelievaboat": {
+        "auth": "",
+        "url": "",
+        "guildId": ""
+    }
+}
