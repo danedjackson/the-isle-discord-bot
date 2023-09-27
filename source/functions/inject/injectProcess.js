@@ -2,9 +2,9 @@ const {  downloadFile, injectEdit, uploadFile } = require('../ftp');
 const { checkBalance, makePayment } = require('../handlers/payment-handler');
 
 const injectProcess = async (request) => {
-    var response;
+    let response;
     request.shift();
-    var [dinoName, dinoGender, dinoPrice, steamId, message] = request;
+    const [dinoName, dinoGender, dinoPrice, steamId, message] = request;
 
     if(!await checkBalance(dinoPrice, message.author.id)) return message.reply(`You do not have enough points for this dino.`);
 

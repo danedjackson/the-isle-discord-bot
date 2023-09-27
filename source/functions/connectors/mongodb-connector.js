@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const config = require('../../cfg/config.json');
 const User = require('../../models/user');
 const DinoInfo = require('../../models/dinoInfo');
+const { checkRequestForSub } = require('../../functions/helper');
 
-const mongoConnect = async(message) => {
+const mongoConnect = async() => {
     try {
         return await mongoose.connect(config.mongodb.uri);
     } catch (err) {
@@ -18,9 +19,13 @@ const handleError = (message, err) => {
 
 const getDinoInfo = async(message, requestedDinoName) => {
      //Check if requested dino name is valid
-     var dinoInfo = [];
+     let dinoInfo = [];
      try{
-        var connection = await mongoConnect(message);
+
+        //Alters String to suit Sub naming convention if a sub is requested
+        requestedDinoName = checkRequestForSub(requestedDinoName);
+
+        const connection = await mongoConnect(message);
 
         dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
 
@@ -39,9 +44,9 @@ const getDinoInfo = async(message, requestedDinoName) => {
 }
 
 const getAllDinoInfo = async(message) => {
-    var dinoInfo = [];
+    let dinoInfo = [];
     try{
-        var connection = await mongoConnect(message);
+        const connection = await mongoConnect(message);
 
         dinoInfo = await DinoInfo.find();
         connection.disconnect();
@@ -55,9 +60,9 @@ const getAllDinoInfo = async(message) => {
 }
 
 const getHighestDinoTier = async(message) => {
-    var highest;
+    let highest;
     try{
-        var connection = await mongoConnect(message);
+        const connection = await mongoConnect(message);
         highest = await DinoInfo.find().sort( {tier:-1} ).limit(1);
         highest = highest[0].tier;
         connection.disconnect();
@@ -82,9 +87,9 @@ const getUserInfoByDiscordId = async(message) => {
 }
 
 const getUserInfoBySteamId = async(message, steamId) => {
-    var userInfo;
+    let userInfo;
     try {
-        var connection = await mongoConnect(message);
+        const connection = await mongoConnect(message);
 
         userInfo = await User.findOne( {steamId: steamId} ).exec();
         connection.disconnect();
@@ -103,7 +108,7 @@ const addUserInfo = async(message, steamId) => {
             steamId: steamId,
         });
 
-        var connection = await mongoConnect(message);
+        const connection = await mongoConnect(message);
 
         await newUser.save();
         connection.disconnect();
@@ -115,9 +120,9 @@ const addUserInfo = async(message, steamId) => {
 }
 
 const updateDinoPriceAndTier = async (message, codeName, newPrice, newTier) => {
-    var dinoInfo;
+    let dinoInfo;
     try {
-        var connection = await mongoConnect(message);
+        const connection = await mongoConnect(message);
         dinoInfo = await DinoInfo.findOne( {codeName: codeName} );
     } catch(err) {
         handleError(message, err);
@@ -128,7 +133,7 @@ const updateDinoPriceAndTier = async (message, codeName, newPrice, newTier) => {
         return dinoInfo;
     }
 
-    var updatedDinoInfo = dinoInfo;
+    let updatedDinoInfo = dinoInfo;
     updatedDinoInfo.price = newPrice;
     updatedDinoInfo.tier = newTier;
 

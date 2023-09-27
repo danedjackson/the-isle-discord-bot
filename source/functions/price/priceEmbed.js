@@ -3,8 +3,8 @@ const { getAllDinoInfo, getHighestDinoTier } = require('../connectors/mongodb-co
 
 const priceEmbed = async(message) => {
 
-    var dinoInfos = await getAllDinoInfo(message);
-    var maxDinoTier = await getHighestDinoTier(message);   
+    const dinoInfos = await getAllDinoInfo(message);
+    const maxDinoTier = await getHighestDinoTier(message);   
 
     const embed = new EmbedBuilder()
     .setColor(0x0099FF)
@@ -12,9 +12,9 @@ const priceEmbed = async(message) => {
     .setDescription('List of prices for all Legacy dinos.')
     //Iterate through all dinosaur tiers found in db
     for(let i = 1; i <= maxDinoTier; i++) {
-        var dinoName = [];
+        let dinoName = [];
         //Getting dino price by tier
-        var dinoPrice = dinoInfos.find( dino => parseInt(dino.tier) == parseInt(i) );
+        const dinoPrice = dinoInfos.find( dino => parseInt(dino.tier) == parseInt(i) );
         
         //Create list of dinosaurs under each dinosaur tier found in database
         for(let x = 0; x < dinoInfos.length; x++) {

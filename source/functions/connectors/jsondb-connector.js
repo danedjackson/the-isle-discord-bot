@@ -1,10 +1,15 @@
 const fs = require('fs');
 const path = require('path');
-var dinoInfos = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../json/prices.json")));
+const dinoInfos = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../json/dinoInfo.json")));
+
+const handleError = (message, err) => {
+    console.error(`${message.author.username} | something went wrong connecting to json DB:\n${err.stack}`);
+    message.reply(`Something went wrong on the server. Please try again later.`);
+}
 
 const getDinoInfo = async(message, requestedDinoName) => {
     //Check if requested dino name is valid
-    var dinoInfo = [];
+    let dinoInfo = [];
     try {
         for (var x = 0; x < dinoInfos.length; x++) {
             if (dinoInfos[x].codeName.toLowerCase() == requestedDinoName.toLowerCase()) {
@@ -14,8 +19,8 @@ const getDinoInfo = async(message, requestedDinoName) => {
         } 
     }
     catch(err) {
-        console.error(`${message.author.username} (JSON DB) | something went wrong connecting to mongo DB:\n${err.stack}`);
-        message.reply(`Something went wrong on the server. Please try again later.`);
+        handleError(message, err);
+        return dinoInfo;
     }
     
     return dinoInfo;
@@ -26,8 +31,8 @@ const getAllDinoInfo = async(message) => {
 }
 
 const getHighestDinoTier = async(message) => {
-   var dinoInfo;
-   var highest = 1;
+   let dinoInfo = [];
+   const highest = 1;
    
     for(var i = 0; i < dinoInfos.length; i++) {
         if (highest < parseInt(dinoInfos[i].tier)) {

@@ -10,9 +10,11 @@ exports.run = async (client, message, args) =>{
     
     //If direct command with parameters used :
     if (args.length != 0) {
-        var requestedDinoName = args[0];
-        var isSafelogged = args[1];
-        var steamId = args[2];
+        const requestedDinoName = args[0];
+        const isSafelogged = args[1];
+        const steamId = args[2];
+        let dinoInfo;
+        let dinoName;
 
         //Check if steamId is numeric
 
@@ -27,7 +29,7 @@ exports.run = async (client, message, args) =>{
         try{
             await mongoose.connect(config.mongodb.uri);
             
-            var dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
+            dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
             if(dinoInfo.length < 1) {
                 message.reply(`Incorrect dino name entered, please try again.`);
                 return;

@@ -1,10 +1,10 @@
 //Logic for checking user balance / deducting from / adding to balance
 const axios = require('axios');
-var config = require('../../cfg/config.json');
+const config = require('../../cfg/config.json');
 
-var unbelievaboatUrl = config.unbelievaboat.url;
-var guildId = config.unbelievaboat.guildId;
-var unbelievaboatAuthorization = config.unbelievaboat.auth;
+const unbelievaboatUrl = config.unbelievaboat.url;
+const guildId = config.unbelievaboat.guildId;
+const unbelievaboatAuthorization = config.unbelievaboat.auth;
 
 async function getUserAmount(userID) {
     return await axios.get(unbelievaboatUrl + "/guilds/" + guildId + "/users/" + userID, {

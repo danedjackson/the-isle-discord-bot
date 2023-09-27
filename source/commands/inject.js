@@ -40,30 +40,15 @@ exports.run = async (client, message, args) =>{
     
     requestedDinoName = checkRequestForSub(requestedDinoName);
 
-    //TODO: Migrate this to mongodb-connector.js
-    //Check if requested dino name is valid
-    try{
-        await mongoose.connect(config.mongodb.uri);
-        
-        //Test requested dino if it's for a sub
-        requestedDinoName = checkRequestForSub(requestedDinoName);
-        
-        var dinoInfo = await DinoInfo.find( {codeName: requestedDinoName.toLowerCase()} );
-        if(dinoInfo.length < 1) {
-            message.reply(`Incorrect dino name entered, please try again.`);
-            return;
-        }
-    } catch (err) {
-        console.error(`${message.author.username} | something went wrong connecting to mongo DB:\n${err}`);
-        message.reply(`Something went wrong on the server. Please try again later.`);
-        return;
-    } 
+    const dinoInfo = getDinoInfo(message, requestedDinoName);
+    if (dinoInfo.length < 1) return;
+
     //Format code name for dinosaur to grow
-    var dinoName = dinoInfo[0].survival && !dinoInfo[0].toString().includes("subs") ? dinoInfo[0].codeName + "AdultS" : dinoInfo[0].codeName;
+    let dinoName = dinoInfo[0].survival && !dinoInfo[0].toString().includes("subs") ? dinoInfo[0].codeName + "AdultS" : dinoInfo[0].codeName;
     
     //Capitalizing first letter of dinosaur name for the JSON filename
     dinoName = dinoName.charAt(0).toUpperCase() + dinoName.slice(1);
-    var dinoPrice = dinoInfo[0].price;
+    const dinoPrice = dinoInfo[0].price;
 
     await queueHandler( ["inject", dinoName, dinoGender, dinoPrice, steamId, message] );
 

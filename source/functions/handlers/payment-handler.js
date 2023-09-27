@@ -1,14 +1,13 @@
 
 const { getUserAmount, deductUserAmountCash, deductUserAmountBank, addUserAmountBank } = require('../api/unbelievaboat-api');
-var config = require('../../cfg/config.json');
 
 const checkBalance = async(price, userId) => {
     if(parseInt(price) == 0) return true;
 
     //check if the user has enough points
-    var money = await getUserAmount(userId);
-    var bank = parseInt(money[0]);
-    var cash = parseInt(money[1]);
+    const money = await getUserAmount(userId);
+    const bank = parseInt(money[0]);
+    const cash = parseInt(money[1]);
     price = parseInt(price);
 
     if (price > cash && price > bank) return false;

@@ -1,6 +1,5 @@
 const ftp = require('basic-ftp');
 const fs = require('fs');
-const path = require('path');
 const config = require('../cfg/config.json');
 
 const serverIp = config.serverInfo.server;
@@ -54,9 +53,10 @@ const downloadFile = async (steamId) => {
 const growEdit = async(dinoName, steamId) => {
     console.log(`Editing file to grow Dino. . . `);
     try{
-        var data = fs.readFileSync(`${steamId}.json`, `utf-8`);
-        var contents = JSON.parse(data);
-        var height;
+        const data = fs.readFileSync(`${steamId}.json`, `utf-8`);
+        let contents = JSON.parse(data);
+        let height;
+        let locationParts;
 
         //Comparing if requested dino is the same as current dino
         if(!contents.CharacterClass.toString().toLowerCase().includes(dinoName.toLowerCase())) {
@@ -78,14 +78,12 @@ const growEdit = async(dinoName, steamId) => {
         contents.Stamina = "9999";
         contents.Health = "15000";
         //Prevent fall through map
-        var locationParts;
         locationParts = contents.Location_Isle_V3.split("Z=", 2);
         locationParts[1] = parseFloat(locationParts[1]);
         locationParts[1] += height;
         locationParts[0] += "Z=";
         locationParts[1] = locationParts[1].toString();
-        var completed = locationParts[0] + locationParts[1];
-        contents.Location_Isle_V3 = completed;
+        contents.Location_Isle_V3 = locationParts[0] + locationParts[1];
         
 
         fs.writeFileSync(`${steamId}.json`, JSON.stringify(contents, null, 4));
@@ -99,9 +97,11 @@ const growEdit = async(dinoName, steamId) => {
 const injectEdit = async(dinoName, dinoGender, steamId) => {
     console.log(`Editing file to grow Dino. . . `);
     try{
-        var data = fs.readFileSync(`${steamId}.json`, `utf-8`);
-        var contents = JSON.parse(data);
-        var height;
+        const data = fs.readFileSync(`${steamId}.json`, `utf-8`);
+        let contents = JSON.parse(data);
+        let height;
+        let locationParts;
+
         dinoName.toLowerCase() == "spino" ? height = 200 : height = 100;
         contents.bGender = dinoGender.toLowerCase().startsWith("m") ? false : true;
         contents.CharacterClass = dinoName;
@@ -111,14 +111,12 @@ const injectEdit = async(dinoName, dinoGender, steamId) => {
         contents.Stamina = "9999";
         contents.Health = "15000";
         //Prevent fall through map
-        var locationParts;
         locationParts = contents.Location_Isle_V3.split("Z=", 2);
         locationParts[1] = parseFloat(locationParts[1]);
         locationParts[1] += height;
         locationParts[0] += "Z=";
         locationParts[1] = locationParts[1].toString();
-        var completed = locationParts[0] + locationParts[1];
-        contents.Location_Isle_V3 = completed;
+        contents.Location_Isle_V3 = locationParts[0] + locationParts[1];
         
 
         fs.writeFileSync(`${steamId}.json`, JSON.stringify(contents, null, 4));
@@ -133,8 +131,8 @@ const uploadFile = async(steamId) => {
     console.log(`Uploading file. . .`);
     try {
         if (!await serverConnection()) return `something went wrong connecting to the server, please try again`;
-        var status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${ftpLocation}${steamId}.json`);
-        var retryCount = 0;
+        const status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${ftpLocation}${steamId}.json`);
+        let retryCount = 0;
         while (status.code != 226 && retryCount < 2) {
             status = await ftpClient.uploadFrom(`${steamId}.json`, `${serverIp}${ftpLocation}${steamId}.json`);
             retryCount++;
